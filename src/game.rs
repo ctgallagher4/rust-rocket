@@ -1,8 +1,8 @@
-use crate::{PERT_SIZE, ASTEROID_NUM_FRAMES};
 use crate::{
     asteroid::Asteroid, explosion::Explosion, missile::Missile, player::Player, smoke::Smoke,
     HEIGHT, NUM_ASTEROIDS, SHIP_SIZE, SMOKE_FRAMES, SPEED_LIMIT, WIDTH,
 };
+use crate::{ASTEROID_NUM_FRAMES, PERT_SIZE};
 use rand::Rng;
 use rusty_time::Timer;
 use sdl2::keyboard::Scancode;
@@ -19,12 +19,14 @@ pub struct Game {
     missile_timer: Timer,
     smoke_trail: Vec<Smoke>,
     explosions: Vec<Explosion>,
+    pub score: i32,
 }
 
 impl Game {
+    /// A struct for storing the game's structs
     pub fn new() -> Self {
         let player: Player = Player::new((WIDTH / 2) as f32, (HEIGHT / 2) as f32, 0.0, 0.0, 0.0);
-        let pert = init_perturbations(8, 360, 5);
+        let pert: Vec<Vec<(i32, i32)>> = Asteroid::init_perturbations(8, 360, 5);
         let asteroids: Vec<Asteroid> = vec![
             Asteroid::new(pert[0].clone()),
             Asteroid::new(pert[1].clone()),
@@ -44,14 +46,16 @@ impl Game {
             missile_timer,
             smoke_trail: vec![],
             explosions: vec![],
+            score: 0,
         }
     }
+    /// A method to update the game's structs
     pub fn update(
         &mut self,
         canvas: &mut Canvas<Window>,
         keyboard_state: &KeyboardState,
         delta: Duration,
-    ) {
+    ) -> bool {
         self.missile_timer.update(delta);
         let thrust = self.player.update(canvas, keyboard_state);
         if thrust {
@@ -74,10 +78,14 @@ impl Game {
         self.check_remove_missiles();
         self.check_add_missiles(keyboard_state);
         self.check_remove_smoke();
-        self.check_collision();
+        if self.check_collision() {
+            return true;
+        }
         self.check_refill_asteroids();
         self.check_remove_explosion();
+        return false;
     }
+    /// A method to check if missiles should be removed
     fn check_remove_missiles(&mut self) {
         let mut rem_indices: Vec<usize> = vec![];
         for (index, missile) in self.missiles.iter().enumerate() {
@@ -95,6 +103,7 @@ impl Game {
             count += 1;
         }
     }
+    /// A method to check if smoke should be removed
     fn check_remove_smoke(&mut self) {
         let mut rem_indices: Vec<usize> = vec![];
         for (index, smoke) in self.smoke_trail.iter().enumerate() {
@@ -108,6 +117,7 @@ impl Game {
             count += 1;
         }
     }
+    /// A method to check if missiles should be added
     fn check_add_missiles(&mut self, keyboard_state: &KeyboardState) {
         let key_space: bool = KeyboardState::is_scancode_pressed(&keyboard_state, Scancode::Space);
         if key_space && self.missile_timer.ready {
@@ -122,28 +132,27 @@ impl Game {
             self.missile_timer.reset()
         }
     }
-    fn check_collision(&mut self) {
+    /// A method to check collisions
+    fn check_collision(&mut self) -> bool {
         let mut rem_indices_asteroid: Vec<usize> = vec![];
         let mut rem_indices_missile: Vec<usize> = vec![];
         for (index, asteroid) in self.asteroids.iter_mut().enumerate() {
+            if ((self.player.x - asteroid.x).powf(2.0) + (self.player.y - asteroid.y).powf(2.0))
+                .powf(0.5)
+                < asteroid.rad + SHIP_SIZE
+            {
+                return true;
+            }
             for (index2, missile) in self.missiles.iter().enumerate() {
-                if ((self.player.x - asteroid.x).powf(2.0) + (self.player.y - asteroid.y).powf(2.0))
-                    .powf(0.5)
-                    < asteroid.rad + SHIP_SIZE
-                {
-                    // End game
-                }
                 if ((missile.x - asteroid.x).powf(2.0) + (missile.y - asteroid.y).powf(2.0))
                     .powf(0.5)
                     < asteroid.rad + SHIP_SIZE / 2.0
                 {
                     rem_indices_asteroid.push(index);
                     rem_indices_missile.push(index2);
-                    self.explosions.push(Explosion::new(
-                        asteroid.x,
-                        asteroid.y,
-                        asteroid.rad,
-                    ))
+                    self.explosions
+                        .push(Explosion::new(asteroid.x, asteroid.y, asteroid.rad));
+                    self.score += 1;
                 }
             }
         }
@@ -157,11 +166,12 @@ impl Game {
             self.missiles.remove(i - count);
             count += 1;
         }
+        return false;
     }
     /// A funtion to refill the number of asteroids in the system
     fn check_refill_asteroids(&mut self) {
         if self.asteroids.len() == 0 {
-            let pert = init_perturbations(NUM_ASTEROIDS as i32, 36, PERT_SIZE);
+            let pert = Asteroid::init_perturbations(NUM_ASTEROIDS as i32, 36, PERT_SIZE);
             for i in 0..NUM_ASTEROIDS {
                 self.asteroids.push(Asteroid::new(pert[i].clone()));
             }
@@ -169,7 +179,7 @@ impl Game {
     }
     /// A function to remove explosions
     fn check_remove_explosion(&mut self) {
-        let mut remove_indices: Vec<usize> = vec!();
+        let mut remove_indices: Vec<usize> = vec![];
         for (index, explosion) in self.explosions.iter().enumerate() {
             if explosion.frame == ASTEROID_NUM_FRAMES {
                 remove_indices.push(index);
@@ -181,20 +191,4 @@ impl Game {
             count += 1;
         }
     }
-}
-
-fn init_perturbations(num_roids: i32, num_points: i32, pert_size: i32) -> Vec<Vec<(i32, i32)>> {
-    let mut rng = rand::thread_rng();
-    let mut arrays: Vec<Vec<(i32, i32)>> = Default::default();
-    for _i in 0..num_roids {
-        let mut random_numbers: Vec<(i32, i32)> = Vec::new();
-        for _ in 0..num_points {
-            random_numbers.push((
-                rng.gen_range(-1 * pert_size..=pert_size),
-                rng.gen_range(-1 * pert_size..=pert_size),
-            ));
-        }
-        arrays.push(random_numbers);
-    }
-    arrays
 }

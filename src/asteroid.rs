@@ -7,6 +7,7 @@ use sdl2::rect::Point;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
+/// A struct for storing an asteroid
 pub struct Asteroid {
     pub x: f32,
     pub y: f32,
@@ -49,6 +50,7 @@ impl Asteroid {
             perturbations,
         }
     }
+    /// A method to update an asteroid
     pub fn update(&mut self, canvas: &mut Canvas<Window>) {
         self.x += self.vel_x;
         self.y += self.vel_y;
@@ -63,6 +65,26 @@ impl Asteroid {
             self.y = HEIGHT as f32;
         }
         self.draw(canvas)
+    }
+    /// A method to generate an asteroid's perturbations
+    pub fn init_perturbations(
+        num_roids: i32,
+        num_points: i32,
+        pert_size: i32,
+    ) -> Vec<Vec<(i32, i32)>> {
+        let mut rng = rand::thread_rng();
+        let mut arrays: Vec<Vec<(i32, i32)>> = Default::default();
+        for _i in 0..num_roids {
+            let mut random_numbers: Vec<(i32, i32)> = Vec::new();
+            for _ in 0..num_points {
+                random_numbers.push((
+                    rng.gen_range(-1 * pert_size..=pert_size),
+                    rng.gen_range(-1 * pert_size..=pert_size),
+                ));
+            }
+            arrays.push(random_numbers);
+        }
+        arrays
     }
 }
 

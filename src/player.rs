@@ -55,7 +55,6 @@ impl Player {
         let mut thrust: bool = false;
         if key_w {
             self.forward();
-            self.draw_fire();
             thrust = true;
         }
         if key_a {
@@ -78,11 +77,6 @@ impl Player {
         }
         self.draw(canvas);
         thrust
-    }
-    fn draw_fire(&mut self) {
-        // let left_line = &[bottom_left, Point::new()][..];
-        // let right_line;
-        // let middle_line;
     }
 }
 

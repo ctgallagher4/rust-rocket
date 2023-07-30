@@ -4,6 +4,7 @@ use sdl2::rect::Point;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
+/// A struct to store a missile
 pub struct Missile {
     pub x: f32,
     pub y: f32,
@@ -13,6 +14,7 @@ pub struct Missile {
 }
 
 impl Missile {
+    /// A method to generate a new missile
     pub fn new(x: f32, y: f32, x_vel: f32, y_vel: f32, bear: f32) -> Self {
         Self {
             x,
@@ -22,6 +24,7 @@ impl Missile {
             bear,
         }
     }
+    /// A method to update a missile
     pub fn update(&mut self, canvas: &mut Canvas<Window>) {
         self.x += self.x_vel;
         self.y += self.y_vel;
@@ -31,6 +34,7 @@ impl Missile {
 }
 
 impl Drawable for Missile {
+    /// A method to draw a missile
     fn draw(&mut self, canvas: &mut Canvas<Window>) {
         let x_top: i32 = (self.x + SHIP_SIZE / 2.0 * self.bear.cos()) as i32;
         let y_top: i32 = (self.y + SHIP_SIZE / 2.0 * self.bear.sin()) as i32;

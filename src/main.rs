@@ -10,14 +10,15 @@ use std::time::Instant;
 
 pub fn main() {
     // Initialize
-    let sdl_context = sdl2::init().unwrap();
-    let video_subsystem = sdl_context.video().unwrap();
-    let window = video_subsystem
+    let sdl_context: sdl2::Sdl = sdl2::init().unwrap();
+    let video_subsystem: sdl2::VideoSubsystem = sdl_context.video().unwrap();
+    let window: sdl2::video::Window = video_subsystem
         .window("Rusteroids", 1200, 1000)
         .position_centered()
         .build()
         .unwrap();
-    let mut canvas = window.into_canvas().build().unwrap();
+    let mut canvas: sdl2::render::Canvas<sdl2::video::Window> =
+        window.into_canvas().build().unwrap();
     canvas.set_draw_color(Color::RGB(0, 0, 0));
     canvas.clear();
     canvas.present();
@@ -50,7 +51,10 @@ pub fn main() {
         canvas.set_draw_color(Color::RGB(255, 255, 255));
         let delta = instant.elapsed();
         instant = Instant::now();
-        game.update(&mut canvas, &keyboard_state, delta);
+        if game.update(&mut canvas, &keyboard_state, delta) {
+            println!("Your score is {}", game.score);
+            break 'running;
+        }
         canvas.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }

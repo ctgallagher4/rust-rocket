@@ -1,10 +1,10 @@
 pub mod asteroid;
+pub mod explosion;
 pub mod game;
 pub mod missile;
 pub mod player;
 pub mod smoke;
 pub mod traits;
-pub mod explosion;
 
 pub const SPEED: f32 = 10.0;
 pub const ACC: f32 = 0.1;
