@@ -3,7 +3,6 @@ use crate::{
     HEIGHT, NUM_ASTEROIDS, SHIP_SIZE, SMOKE_FRAMES, SPEED_LIMIT, WIDTH,
 };
 use crate::{ASTEROID_NUM_FRAMES, PERT_SIZE};
-use rand::Rng;
 use rusty_time::Timer;
 use sdl2::keyboard::Scancode;
 use sdl2::video::Window;
