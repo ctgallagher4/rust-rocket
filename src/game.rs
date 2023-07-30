@@ -2,7 +2,7 @@ use crate::{
     asteroid::Asteroid, explosion::Explosion, missile::Missile, player::Player, smoke::Smoke,
     HEIGHT, NUM_ASTEROIDS, SHIP_SIZE, SMOKE_FRAMES, SPEED_LIMIT, WIDTH,
 };
-use crate::{ASTEROID_NUM_FRAMES, PERT_SIZE};
+use crate::{ASTEROID_NUM_FRAMES, PERT_SIZE, MISSLE_REFRESH};
 use rusty_time::Timer;
 use sdl2::keyboard::Scancode;
 use sdl2::video::Window;
@@ -37,7 +37,7 @@ impl Game {
             Asteroid::new(pert[7].clone()),
         ];
         let missiles: Vec<Missile> = vec![];
-        let missile_timer = Timer::from_millis(200);
+        let missile_timer = Timer::from_millis(MISSLE_REFRESH);
         Self {
             player,
             asteroids,

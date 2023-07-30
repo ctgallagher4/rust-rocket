@@ -6,7 +6,6 @@ pub mod player;
 pub mod smoke;
 pub mod traits;
 
-pub const SPEED: f32 = 10.0;
 pub const ACC: f32 = 0.1;
 pub const SHIP_SIZE: f32 = 20.0;
 pub const TURN_SPEED: f32 = 5.0;
@@ -20,3 +19,4 @@ pub const SMOKE_FRAMES: i32 = 35;
 pub const NUM_ASTEROIDS: usize = 8;
 pub const PERT_SIZE: i32 = 5;
 pub const ASTEROID_NUM_FRAMES: i32 = 50;
+pub const MISSLE_REFRESH: u64 = 400;
