@@ -56,7 +56,7 @@ impl Game {
         delta: Duration,
     ) -> bool {
         self.missile_timer.update(delta);
-        let thrust = self.player.update(canvas, keyboard_state);
+        let thrust = self.player.update(canvas, keyboard_state, delta);
         if thrust {
             let back_x = self.player.x + SHIP_SIZE * (self.player.bear + PI).cos();
             let back_y = self.player.y + SHIP_SIZE * (self.player.bear + PI).sin();
@@ -66,10 +66,10 @@ impl Game {
             smoke.update(canvas)
         }
         for asteroid in self.asteroids.iter_mut() {
-            asteroid.update(canvas);
+            asteroid.update(canvas, delta);
         }
         for missile in self.missiles.iter_mut() {
-            missile.update(canvas);
+            missile.update(canvas, delta);
         }
         for explosion in self.explosions.iter_mut() {
             explosion.update(canvas);

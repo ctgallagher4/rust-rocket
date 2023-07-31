@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use crate::traits::Drawable;
 use crate::SHIP_SIZE;
 use sdl2::rect::Point;
@@ -25,9 +27,9 @@ impl Missile {
         }
     }
     /// A method to update a missile
-    pub fn update(&mut self, canvas: &mut Canvas<Window>) {
-        self.x += self.x_vel;
-        self.y += self.y_vel;
+    pub fn update(&mut self, canvas: &mut Canvas<Window>, delta: Duration) {
+        self.x += self.x_vel * delta.as_secs_f32();
+        self.y += self.y_vel * delta.as_secs_f32();
 
         self.draw(canvas)
     }

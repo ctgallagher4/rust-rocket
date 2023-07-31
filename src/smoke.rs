@@ -31,12 +31,12 @@ impl Drawable for Smoke {
         for angle in 0..=360 {
             let rads = angle as f32 / 360.0 * 2.0 * PI;
             let x = self.x
-                + rng.gen_range(0..10) as f32 / 10.0
+                + rng.gen_range(0..11) as f32 / 10.0
                     * SMOKE_SIZE
                     * (self.frame as f32)
                     * (rads as f32).cos();
             let y = self.y
-                + rng.gen_range(0..10) as f32 / 10.0
+                + rng.gen_range(0..11) as f32 / 10.0
                     * SMOKE_SIZE
                     * (self.frame as f32)
                     * (rads as f32).sin();

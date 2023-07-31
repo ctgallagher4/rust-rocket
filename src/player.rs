@@ -1,4 +1,5 @@
 use std::f32::consts::PI;
+use std::time::Duration;
 
 use crate::{traits::Drawable, ACC, HEIGHT, SHIP_SIZE, SPEED_LIMIT, TURN_SPEED, WIDTH};
 use sdl2::keyboard::Scancode;
@@ -25,9 +26,9 @@ impl Player {
         }
     }
     /// A function to move a player forward
-    pub fn forward(&mut self) {
-        self.speed_x += ACC * self.bear.cos();
-        self.speed_y += ACC * self.bear.sin();
+    pub fn forward(&mut self, delta: Duration) {
+        self.speed_x += ACC * self.bear.cos() * delta.as_secs_f32();
+        self.speed_y += ACC * self.bear.sin() * delta.as_secs_f32();
         if self.speed_x > SPEED_LIMIT {
             self.speed_x = SPEED_LIMIT;
         } else if self.speed_x < -1.0 * SPEED_LIMIT {
@@ -40,31 +41,31 @@ impl Player {
         }
     }
     /// A function to turn left
-    pub fn turn_left(&mut self) {
-        self.bear -= TURN_SPEED * 2.0 * PI / 360.0;
+    pub fn turn_left(&mut self, delta: Duration) {
+        self.bear -= TURN_SPEED * 2.0 * PI / 360.0 * delta.as_secs_f32() as f32;
     }
     /// A function to turn right
-    pub fn turn_right(&mut self) {
-        self.bear += TURN_SPEED * 2.0 * PI / 360.0;
+    pub fn turn_right(&mut self, delta: Duration) {
+        self.bear += TURN_SPEED * 2.0 * PI / 360.0 * delta.as_secs_f32() as f32;
     }
     /// Update the player and missiles
-    pub fn update(&mut self, canvas: &mut Canvas<Window>, keyboard_state: &KeyboardState) -> bool {
+    pub fn update(&mut self, canvas: &mut Canvas<Window>, keyboard_state: &KeyboardState, delta: Duration) -> bool {
         let key_w: bool = KeyboardState::is_scancode_pressed(&keyboard_state, Scancode::W);
         let key_a: bool = KeyboardState::is_scancode_pressed(&keyboard_state, Scancode::A);
         let key_d: bool = KeyboardState::is_scancode_pressed(&keyboard_state, Scancode::D);
         let mut thrust: bool = false;
         if key_w {
-            self.forward();
+            self.forward(delta);
             thrust = true;
         }
         if key_a {
-            self.turn_left();
+            self.turn_left(delta);
         }
         if key_d {
-            self.turn_right();
+            self.turn_right(delta);
         }
-        self.x += self.speed_x;
-        self.y += self.speed_y;
+        self.x += self.speed_x * delta.as_secs_f32();
+        self.y += self.speed_y * delta.as_secs_f32();
         if self.x > WIDTH as f32 {
             self.x = 0.0;
         } else if self.x < 0 as f32 {

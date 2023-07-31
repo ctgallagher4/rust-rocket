@@ -1,4 +1,5 @@
 use std::f32::consts::PI;
+use std::time::Duration;
 
 use crate::traits::Drawable;
 use crate::{AST_POINTS, HEIGHT, SPEED_LIMIT, WIDTH};
@@ -51,9 +52,9 @@ impl Asteroid {
         }
     }
     /// A method to update an asteroid
-    pub fn update(&mut self, canvas: &mut Canvas<Window>) {
-        self.x += self.vel_x;
-        self.y += self.vel_y;
+    pub fn update(&mut self, canvas: &mut Canvas<Window>, delta: Duration) {
+        self.x += self.vel_x * delta.as_secs_f32();
+        self.y += self.vel_y * delta.as_secs_f32();
         if self.x > WIDTH as f32 {
             self.x = 0.0;
         } else if self.x < 0.0 {
