@@ -6,9 +6,9 @@ pub mod player;
 pub mod smoke;
 pub mod traits;
 
-pub const ACC: f32 = 120.0;
+pub const ACC: f32 = 180.0;
 pub const SHIP_SIZE: f32 = 20.0;
-pub const TURN_SPEED: f32 = 120.0;
+pub const TURN_SPEED: f32 = 150.0;
 pub const WIDTH: i32 = 1200;
 pub const HEIGHT: i32 = 1000;
 pub const SPEED_LIMIT: f32 = 200.0;
