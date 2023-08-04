@@ -2,7 +2,7 @@ use crate::{
     asteroid::Asteroid, explosion::Explosion, missile::Missile, player::Player, smoke::Smoke,
     HEIGHT, NUM_ASTEROIDS, SHIP_SIZE, SMOKE_FRAMES, SPEED_LIMIT, WIDTH,
 };
-use crate::{ASTEROID_NUM_FRAMES, PERT_SIZE, MISSLE_REFRESH};
+use crate::{ASTEROID_NUM_FRAMES, MISSLE_REFRESH, PERT_SIZE};
 use rusty_time::Timer;
 use sdl2::keyboard::Scancode;
 use sdl2::video::Window;

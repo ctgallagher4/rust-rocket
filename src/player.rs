@@ -49,7 +49,12 @@ impl Player {
         self.bear += TURN_SPEED * 2.0 * PI / 360.0 * delta.as_secs_f32() as f32;
     }
     /// Update the player and missiles
-    pub fn update(&mut self, canvas: &mut Canvas<Window>, keyboard_state: &KeyboardState, delta: Duration) -> bool {
+    pub fn update(
+        &mut self,
+        canvas: &mut Canvas<Window>,
+        keyboard_state: &KeyboardState,
+        delta: Duration,
+    ) -> bool {
         let key_w: bool = KeyboardState::is_scancode_pressed(&keyboard_state, Scancode::W);
         let key_a: bool = KeyboardState::is_scancode_pressed(&keyboard_state, Scancode::A);
         let key_d: bool = KeyboardState::is_scancode_pressed(&keyboard_state, Scancode::D);

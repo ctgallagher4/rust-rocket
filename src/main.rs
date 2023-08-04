@@ -25,7 +25,6 @@ pub fn main() {
     let mut event_pump = sdl_context.event_pump().unwrap();
     let mut game = Game::new();
 
-
     // start instant
     let mut instant = Instant::now();
 
